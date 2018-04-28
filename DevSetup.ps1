@@ -11,6 +11,8 @@ trap { throw $Error[0] }
 
 function Main {
     EnsureRunningAsAdmin
+
+    dir
 }
 
 function EnsureRunningAsAdmin {
