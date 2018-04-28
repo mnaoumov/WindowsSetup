@@ -50,6 +50,7 @@ function EnsureMandatorySetupSettingsStored {
             FullName = Read-Host -Prompt 'Enter Your Name'
             Email = Read-Host -Prompt 'Enter Your Email'
             GitLabPassword = Read-Host -Prompt 'Enter Your GitLab Password'
+            WindowsPassword = Read-Host -Prompt 'Enter Your Windows Password'
         }
 
         $settings | ConvertTo-Json | Out-File -FilePath $settingsFile
