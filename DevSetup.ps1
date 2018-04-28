@@ -21,7 +21,7 @@ function Main {
             $securePassword = ConvertTo-SecureString -String $settings.WindowsPassword -AsPlainText -Force
             $credential = New-Object -TypeName PSCredential -ArgumentList @($env:USERNAME, $securePassword)
             IncreaseBuildStep
-            Install-BoxStarterPackage -PackageName https://bit.ly/2w0WQVQ -Credential $credential
+            Install-BoxStarterPackage -PackageName $PSCommandPath -Credential $credential
         }
         1 {
             $message = "$(Get-Date) Before Reboot`n"
