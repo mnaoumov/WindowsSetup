@@ -33,7 +33,7 @@ function Test-Administrator {
 }
 
 function ConfigurePowerShellPolicy {
-    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Force
+    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Force -Scope CurrentUser
 }
 
 function DoNotOpenServerManagerAtLogon {
