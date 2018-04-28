@@ -1,0 +1,1 @@
+powershell -NoExit -NoProfile -ExecutionPolicy Bypass -Command "Invoke-WebRequest -Uri https://github.com/mnaoumov/WindowsSetup/raw/master/DevSetup.ps1 -UseBasicParsing | Invoke-Expression"
