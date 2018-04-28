@@ -22,7 +22,36 @@ function Main {
         Install-BoxStarterPackage -PackageName $PSCommandPath -Credential $credential
     }
     else {
-        
+        choco install powershell -y
+        choco install visualstudiocode -y
+        choco install git -y
+        choco install gitextensions -y
+        choco install kdiff3 -y
+        choco install cmder -y
+        choco install sql-server-2017 -y
+        choco install visualstudio2017community -y
+        choco install resharper -y
+
+        Install-WindowsFeature -Name Web-Server, Web-Mgmt-Console, Web-Scripting-Tools, Web-Asp-Net45
+
+        if (Test-PendingReboot) {
+            Invoke-Reboot
+        }
+
+        if (-not (Test-Path -Path C:\Dev)) {
+            New-Item -Path C:\Dev -ItemType Directory | Out-Null
+        }
+
+        if (-not (Test-Path -Path C:\Dev\RISC)) {
+            Set-Location -Path C:\Dev
+            cmdkey /generic:git:https://git.voliasoftware.com "/user:$($settings.Email)" "/pass:$($settings.GitLabPassword)"
+            cmdkey "/generic:git:https://$($settings.Email)@git.voliasoftware.com" "/user:$($settings.Email)" "/pass:$($settings.GitLabPassword)"
+    
+            git clone https://git.voliasoftware.com/risc/riscvta.git RISC
+            Set-Location -Path RISC
+            git config user.email $settings.Email
+            git config user.name $settings.FullName
+        }
     }
 }
 
