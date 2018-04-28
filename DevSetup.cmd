@@ -1,1 +1,1 @@
-powershell -NoExit -NoProfile -ExecutionPolicy Bypass -Command "[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri https://github.com/mnaoumov/WindowsSetup/raw/master/DevSetup.ps1 -UseBasicParsing | Invoke-Expression"
+powershell -NoExit -NoProfile -ExecutionPolicy Bypass -Command "[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri https://bit.ly/2w0WQVQ -UseBasicParsing | Invoke-Expression"
