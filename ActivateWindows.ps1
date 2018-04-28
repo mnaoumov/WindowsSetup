@@ -5,7 +5,7 @@ param
 (
 )
 
-$ErrorActionPreference = "Stop"
+$ErrorActionPreference = [System.Management.Automation.ActionPreference]::Stop
 Set-StrictMode -Version Latest
 trap { throw $Error[0] }
 
