@@ -11,7 +11,7 @@ trap { throw $Error[0] }
 
 function Main {
     EnsureRunningAsAdmin
-    EnsureMandatorySetupSettingsStored
+    $settings = InitSetupSettings
     ConfigurePowerShellPolicy
     Install-BoxStarter
 }
@@ -46,7 +46,7 @@ function Install-BoxStarter {
     Get-BoxStarter -Force
 }
 
-function EnsureMandatorySetupSettingsStored {
+function InitSetupSettings {
     $settingsFile = "$env:USERPROFILE\DevSetupSettings.json"
 
     if (-not (Test-Path -Path $settingsFile)) {
@@ -59,6 +59,8 @@ function EnsureMandatorySetupSettingsStored {
 
         $settings | ConvertTo-Json | Out-File -FilePath $settingsFile
     }
+
+    Get-Content -Path $settingsFile -Raw | ConvertFrom-Json
 }
 
 Main
