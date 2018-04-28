@@ -35,6 +35,9 @@ function ConfigurePowerShellPolicy {
 }
 
 function Install-BoxStarter {
+    if (Test-Path -Path Variable:Boxstarter) {
+        return
+    }
     Invoke-WebRequest -UseBasicParsing -Uri http://boxstarter.org/bootstrapper.ps1 | Invoke-Expression
     Get-BoxStarter -Force
 }
