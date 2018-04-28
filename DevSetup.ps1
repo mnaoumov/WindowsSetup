@@ -13,23 +13,16 @@ function Main {
     EnsureRunningAsAdmin
     $settings = InitSetupSettings
 
-    switch ($settings.BuildStep) {
-        0 {
-            ConfigurePowerShellPolicy
-            Install-BoxStarter
-        
-            $securePassword = ConvertTo-SecureString -String $settings.WindowsPassword -AsPlainText -Force
-            $credential = New-Object -TypeName PSCredential -ArgumentList @($env:USERNAME, $securePassword)
-            IncreaseBuildStep
-            "before boxstarter"
-            $Boxstarter | fl *
+    if (-not (Test-InsideBoxstarterInstall)) {
+        ConfigurePowerShellPolicy
+        Install-BoxStarter
 
-            Install-BoxStarterPackage -PackageName $PSCommandPath -Credential $credential
-        }
-        Default {
-            "during boxstarter"
-            $Boxstarter | fl *
-        }
+        $securePassword = ConvertTo-SecureString -String $settings.WindowsPassword -AsPlainText -Force
+        $credential = New-Object -TypeName PSCredential -ArgumentList @($env:USERNAME, $securePassword)
+        Install-BoxStarterPackage -PackageName $PSCommandPath -Credential $credential
+    }
+    else {
+        
     }
 }
 
@@ -86,6 +79,10 @@ function IncreaseBuildStep {
     $settings = Get-Content -Path $settingsFile -Raw | ConvertFrom-Json
     $settings.BuildStep++
     $settings | ConvertTo-Json | Out-File -FilePath $settingsFile
+}
+
+function Test-InsideBoxstarterInstall {
+    (Test-Path -Path Variable:Boxstarter) -and $Boxstarter.ContainsKey('SourcePID')
 }
 
 Main
