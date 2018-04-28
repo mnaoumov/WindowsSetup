@@ -12,7 +12,7 @@ trap { throw $Error[0] }
 function Main {
     EnsureRunningAsAdmin
 
-    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
 
     $tempDir = [System.IO.Path]::GetTempPath() + [Guid]::NewGuid()
     New-Item -Path $tempDir -ItemType Directory | Out-Null
