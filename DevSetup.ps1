@@ -27,7 +27,7 @@ function Main {
             $message = "$(Get-Date) Before Reboot`n"
             $message
             $message | Out-File -FilePath "$env:USERPROFILE\test.txt" -Append
-            Start-Sleep -Seconds 60
+            Start-Sleep -Seconds 10
             IncreaseBuildStep
             Invoke-Reboot
         }
@@ -35,7 +35,7 @@ function Main {
             $message = "$(Get-Date) After Reboot`n"
             $message
             $message | Out-File -FilePath "$env:USERPROFILE\test.txt" -Append
-            Start-Sleep -Seconds 60
+            Start-Sleep -Seconds 10
             IncreaseBuildStep
             Invoke-Reboot
         }
