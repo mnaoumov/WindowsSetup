@@ -28,6 +28,10 @@ function Test-Administrator {
 }
 
 function ConfigurePowerShellPolicy {
+    if ((Get-ExecutionPolicy -Scope LocalMachine) -eq [Microsoft.PowerShell.ExecutionPolicy]::RemoteSigned) {
+        return
+    }
+
     $currentProcessPolicy = Get-ExecutionPolicy -Scope Process
     Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Force -Scope Process
     Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Force
