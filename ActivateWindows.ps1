@@ -33,7 +33,7 @@ function Main {
 
 function EnsureRunningAsAdmin {
     if (-not (Test-Administrator)) {
-        Start-Process -FilePath powershell.exe -ArgumentsList "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs
+        Start-Process -FilePath powershell.exe -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs
         exit
     }
 }
