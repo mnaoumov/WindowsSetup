@@ -28,7 +28,10 @@ function Test-Administrator {
 }
 
 function ConfigurePowerShellPolicy {
-    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Force -Scope CurrentUser
+    $currentProcessPolicy = Get-ExecutionPolicy -Scope Process
+    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Force -Scope Process
+    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Force
+    Set-ExecutionPolicy -ExecutionPolicy $currentProcessPolicy -Force -Scope Process
 }
 
 function Install-BoxStarter {
