@@ -65,20 +65,12 @@ function InitSetupSettings {
             Email = Read-Host -Prompt 'Enter Your Email'
             GitLabPassword = Read-Host -Prompt 'Enter Your GitLab Password'
             WindowsPassword = Read-Host -Prompt 'Enter Your Windows Password'
-            BuildStep = 0
         }
 
         $settings | ConvertTo-Json | Out-File -FilePath $settingsFile
     }
 
     Get-Content -Path $settingsFile -Raw | ConvertFrom-Json
-}
-
-function IncreaseBuildStep {
-    $settingsFile = "$env:USERPROFILE\DevSetupSettings.json"
-    $settings = Get-Content -Path $settingsFile -Raw | ConvertFrom-Json
-    $settings.BuildStep++
-    $settings | ConvertTo-Json | Out-File -FilePath $settingsFile
 }
 
 function Test-InsideBoxstarterInstall {
