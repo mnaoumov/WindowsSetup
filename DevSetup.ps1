@@ -21,26 +21,14 @@ function Main {
             $securePassword = ConvertTo-SecureString -String $settings.WindowsPassword -AsPlainText -Force
             $credential = New-Object -TypeName PSCredential -ArgumentList @($env:USERNAME, $securePassword)
             IncreaseBuildStep
+            "before boxstarter"
+            $Boxstarter | fl *
+
             Install-BoxStarterPackage -PackageName $PSCommandPath -Credential $credential
         }
-        1 {
-            $message = "$(Get-Date) Before Reboot`n"
-            $message
-            $message | Out-File -FilePath "$env:USERPROFILE\test.txt" -Append
-            Start-Sleep -Seconds 10
-            IncreaseBuildStep
-            Invoke-Reboot
-        }
-        2 {
-            $message = "$(Get-Date) After Reboot`n"
-            $message
-            $message | Out-File -FilePath "$env:USERPROFILE\test.txt" -Append
-            Start-Sleep -Seconds 10
-            IncreaseBuildStep
-            Invoke-Reboot
-        }
         Default {
-            "We are done"
+            "during boxstarter"
+            $Boxstarter | fl *
         }
     }
 }
