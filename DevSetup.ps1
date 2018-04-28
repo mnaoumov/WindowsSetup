@@ -17,7 +17,7 @@ function Main {
 
 function EnsureRunningAsAdmin {
     if (-not (Test-Administrator)) {
-        Start-Process -FilePath powershell.exe -ArgumentsList "-NoProfile -ExecutionPolicy Bypass -Command `"[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri https://bit.ly/2w0WQVQ -UseBasicParsing | Invoke-Expression`"" -Verb RunAs
+        Start-Process -FilePath powershell.exe -ArgumentsList "-NoExit -NoProfile -ExecutionPolicy Bypass -Command `"[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri https://bit.ly/2w0WQVQ -UseBasicParsing | Invoke-Expression`"" -Verb RunAs
         exit
     }
 }
