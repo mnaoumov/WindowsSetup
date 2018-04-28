@@ -31,6 +31,9 @@ function Main {
         choco install sql-server-2017 -y
         choco install visualstudio2017community -y
         choco install resharper -y
+        choco install GoogleChrome -y
+        choco install Firefox -y
+
 
         Install-WindowsFeature -Name Web-Server, Web-Mgmt-Console, Web-Scripting-Tools, Web-Asp-Net45
 
