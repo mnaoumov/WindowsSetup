@@ -14,7 +14,7 @@ function Main {
     $settings = InitSetupSettings
 
     switch ($settings.BuildStep) {
-        0 { 
+        0 {
             ConfigurePowerShellPolicy
             Install-BoxStarter
         
