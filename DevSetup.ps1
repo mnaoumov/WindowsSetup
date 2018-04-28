@@ -14,6 +14,10 @@ function Main {
     $settings = InitSetupSettings
     ConfigurePowerShellPolicy
     Install-BoxStarter
+
+    $securePassword = ConvertTo-SecureString -String $settings.WindowsPassword -AsPlainText -Force
+    $credential = New-Object -TypeName PSCredential -ArgumentList @($env:USERNAME, $securePassword)
+    Install-BoxStarterPackage -PackageName https://raw.githubusercontent.com/mnaoumov/WindowsSetup/master/DevSetupBoxstarter.ps1 -Credential $credential
 }
 
 function EnsureRunningAsAdmin {
