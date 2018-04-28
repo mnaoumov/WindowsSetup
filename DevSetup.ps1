@@ -11,6 +11,7 @@ trap { throw $Error[0] }
 
 function Main {
     EnsureRunningAsAdmin
+    EnsureMandatorySetupSettingsStored
     ConfigurePowerShellPolicy
     Install-BoxStarter
 }
@@ -33,6 +34,20 @@ function ConfigurePowerShellPolicy {
 function Install-BoxStarter {
     Invoke-WebRequest -UseBasicParsing -Uri http://boxstarter.org/bootstrapper.ps1 | Invoke-Expression
     Get-BoxStarter -Force
+}
+
+function EnsureMandatorySetupSettingsStored {
+    $settingsFile = "$env:USERPROFILE\DevSetupSettings.json"
+
+    if (-not (Test-Path -Path $settingsFile)) {
+        $settings = @{
+            FullName = Read-Host -Prompt 'Enter Your Name'
+            Email = Read-Host -Prompt 'Enter Your Email'
+            GitLabPassword = Read-Host -Prompt 'Enter Your GitLab Password'
+        }
+
+        $settings | ConvertTo-Json | Out-File -FilePath $settingsFile
+    }
 }
 
 Main
