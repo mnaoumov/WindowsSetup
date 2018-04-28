@@ -17,6 +17,7 @@ function Main {
     ShowHiddenFilesInExplorer
     ShowSystemFilesInExplorer
     DisableInternetExplorerEnhancedSecurity
+    Remove-InternetExplorerFirstHomePage
     Rename-Computer -NewName 'Dev-VM'
     Set-TimeZone -Name 'FLE Standard Time'
 }
@@ -71,6 +72,10 @@ function Set-TimeZone {
     )
 
     tzutil.exe /s $Name
+}
+
+function Remove-InternetExplorerFirstHomePage {
+    Remove-ItemProperty -Path 'Registry::HKEY_CURRENT_USER\SOFTWARE\Microsoft\Internet Explorer\Main' -Name 'First Home Page' -ErrorAction SilentlyContinue
 }
 
 Main
