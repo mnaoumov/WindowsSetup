@@ -12,12 +12,37 @@ trap { throw $Error[0] }
 function Main {
     EnsureRunningAsAdmin
     $settings = InitSetupSettings
-    ConfigurePowerShellPolicy
-    Install-BoxStarter
 
-    $securePassword = ConvertTo-SecureString -String $settings.WindowsPassword -AsPlainText -Force
-    $credential = New-Object -TypeName PSCredential -ArgumentList @($env:USERNAME, $securePassword)
-    Install-BoxStarterPackage -PackageName https://raw.githubusercontent.com/mnaoumov/WindowsSetup/master/DevSetupBoxstarter.ps1 -Credential $credential
+    switch ($settings.BuildStep) {
+        0 { 
+            ConfigurePowerShellPolicy
+            Install-BoxStarter
+        
+            $securePassword = ConvertTo-SecureString -String $settings.WindowsPassword -AsPlainText -Force
+            $credential = New-Object -TypeName PSCredential -ArgumentList @($env:USERNAME, $securePassword)
+            IncreaseBuildStep
+            Install-BoxStarterPackage -PackageName https://bit.ly/2w0WQVQ -Credential $credential
+        }
+        1 {
+            $message = "$(Get-Date) Before Reboot`n"
+            $message
+            $message | Out-File -FilePath "$env:USERPROFILE\test.txt" -Append
+            Start-Sleep -Seconds 60
+            IncreaseBuildStep
+            Invoke-Reboot
+        }
+        2 {
+            $message = "$(Get-Date) After Reboot`n"
+            $message
+            $message | Out-File -FilePath "$env:USERPROFILE\test.txt" -Append
+            Start-Sleep -Seconds 60
+            IncreaseBuildStep
+            Invoke-Reboot
+        }
+        Default {
+            "We are done"
+        }
+    }
 }
 
 function EnsureRunningAsAdmin {
@@ -59,12 +84,20 @@ function InitSetupSettings {
             Email = Read-Host -Prompt 'Enter Your Email'
             GitLabPassword = Read-Host -Prompt 'Enter Your GitLab Password'
             WindowsPassword = Read-Host -Prompt 'Enter Your Windows Password'
+            BuildStep = 0
         }
 
         $settings | ConvertTo-Json | Out-File -FilePath $settingsFile
     }
 
     Get-Content -Path $settingsFile -Raw | ConvertFrom-Json
+}
+
+function IncreaseBuildStep {
+    $settingsFile = "$env:USERPROFILE\DevSetupSettings.json"
+    $settings = Get-Content -Path $settingsFile -Raw | ConvertFrom-Json
+    $settings.BuildStep++
+    $settings | ConvertTo-Json | Out-File -FilePath $settingsFile
 }
 
 Main
