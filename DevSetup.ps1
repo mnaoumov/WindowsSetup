@@ -11,8 +11,8 @@ trap { throw $Error[0] }
 
 function Main {
     EnsureRunningAsAdmin
-
-    dir
+    ConfigurePowerShellPolicy
+    Install-BoxStarter
 }
 
 function EnsureRunningAsAdmin {
@@ -24,6 +24,15 @@ function EnsureRunningAsAdmin {
 
 function Test-Administrator {
     ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+}
+
+function ConfigurePowerShellPolicy {
+    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Force
+}
+
+function Install-BoxStarter {
+    Invoke-WebRequest -UseBasicParsing -Uri http://boxstarter.org/bootstrapper.ps1 | Invoke-Expression
+    Get-BoxStarter -Force
 }
 
 Main
