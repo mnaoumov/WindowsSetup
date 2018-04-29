@@ -111,10 +111,10 @@ function InitSetupSettings {
 
     if (-not (Test-Path -Path $settingsFile)) {
         $settings = @{
-            FullName = Read-Host -Prompt 'Enter Your Name'
-            Email = Read-Host -Prompt 'Enter Your Email'
-            GitLabPassword = Read-Host -Prompt 'Enter Your GitLab Password'
-            WindowsPassword = Read-Host -Prompt 'Enter Your Windows Password'
+            FullName         = Read-Host -Prompt 'Enter Your Name'
+            Email            = Read-Host -Prompt 'Enter Your Email'
+            GitLabPassword   = Read-Host -Prompt 'Enter Your GitLab Password'
+            WindowsPassword  = Read-Host -Prompt 'Enter Your Windows Password'
             DBBackupPassword = Read-Host -Prompt 'Enter Password for DBBackup download (ask your team lead)'
         }
 
@@ -222,6 +222,23 @@ function RestoreDatabase {
 
     Import-Module -Name SqlServer
 
+    New-Item -Path C:\Dev\DB\VTA70 -ItemType Directory | Out-Null
+
+    $backupParts = @(
+        "BPGLOBAL.mdf"
+        "BPGLOBAL1.mdf"
+        "ftrow_Corsefulltext.mdf"
+        "ftrow_BlogFullText.mdf"
+        "ftrow_EmpFullText.mdf"
+        "BPGLOBALLOG.ldf"
+    )
+
+    $relocateFiles = $backupParts | ForEach-Object -Process {
+        $name = $_.Split(".")[0]
+        New-Object -TypeName Microsoft.SqlServer.Management.Smo.RelocateFile -ArgumentList ($name, "c:\Dev\DB\VTA70\$_")
+    }
+
+    Restore-SqlDatabase -ServerInstance . -Database VTA70 -BackupFile C:\dev\VTA70.bak -RelocateFile $relocateFiles
 }
 
 Main
