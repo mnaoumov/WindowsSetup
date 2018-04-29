@@ -55,6 +55,9 @@ function Main {
             git config user.email $settings.Email
             git config user.name $settings.FullName
         }
+
+        $credential = New-Object -TypeName PScredential -ArgumentList @('Vince', (ConvertTo-SecureString -String $settings.DBBackupPassword -AsPlainText -Force))
+        Invoke-WebRequest -Credential $credential -UseBasicParsing -Uri http://148.251.185.130:9080/DBBackup/VTA70.bak -OutFile C:\Dev\VTA70.bak
     }
 }
 
@@ -97,6 +100,7 @@ function InitSetupSettings {
             Email = Read-Host -Prompt 'Enter Your Email'
             GitLabPassword = Read-Host -Prompt 'Enter Your GitLab Password'
             WindowsPassword = Read-Host -Prompt 'Enter Your Windows Password'
+            DBBackupPassword = Read-Host -Prompt 'Enter Password for DBBackup download (ask your team lead)'
         }
 
         $settings | ConvertTo-Json | Out-File -FilePath $settingsFile
