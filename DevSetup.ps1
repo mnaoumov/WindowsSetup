@@ -61,6 +61,9 @@ function Main {
 
         $credential = New-Object -TypeName PScredential -ArgumentList @('Vince', (ConvertTo-SecureString -String $settings.DBBackupPassword -AsPlainText -Force))
         Invoke-WebRequest -Credential $credential -UseBasicParsing -Uri http://148.251.185.130:9080/DBBackup/VTA70.bak -OutFile C:\Dev\VTA70.bak
+        PinToTaskBar -ApplicationPath 'C:\Program Files\Microsoft VS Code\Code.exe'
+        PinToTaskBar -ApplicationPath 'c:\tools\cmder\Cmder.exe'
+        PinToTaskBar -ApplicationPath 'C:\Program Files (x86)\Microsoft SQL Server\140\Tools\Binn\ManagementStudio\Ssms.exe'
     }
 }
 
@@ -139,4 +142,18 @@ function Install-ChocolateyPackage {
     }
 }
 
+function PinToTaskBar {
+    param
+    (
+        [Parameter(Mandatory)]
+        [string] $ApplicationPath
+    )
+
+    $syspinPath = "$Env:USERPROFILE\syspin.exe"
+    if (-not (Test-Path -Path $syspinPath)) {
+        Invoke-WebRequest -UseBasicParsing -Uri http://www.technosys.net/download.aspx?file=syspin.exe -OutFile $syspinPath
+    }
+    
+    & $syspinPath $ApplicationPath 'c:"Pin to taskbar"'
+}
 Main
