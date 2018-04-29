@@ -32,7 +32,9 @@ function Main {
         if (Test-PendingReboot) {
             Invoke-Reboot
         }
+
         choco install sql-server-2017 -y
+        choco install sql-server-management-studio -y
 
         if (Test-PendingReboot) {
             Invoke-Reboot
