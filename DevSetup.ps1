@@ -53,7 +53,7 @@ function Main {
             cmdkey /generic:git:https://git.voliasoftware.com "/user:$($settings.Email)" "/pass:$($settings.GitLabPassword)"
             cmdkey "/generic:git:https://$($settings.Email)@git.voliasoftware.com" "/user:$($settings.Email)" "/pass:$($settings.GitLabPassword)"
     
-            git clone https://git.voliasoftware.com/risc/riscvta.git RISC --quiet
+            InvokeAndIgnoreStdErr -ScriptBlock { git clone https://git.voliasoftware.com/risc/riscvta.git RISC --progress }
             Set-Location -Path RISC
             git config user.email $settings.Email
             git config user.name $settings.FullName
@@ -168,6 +168,25 @@ function ConfigureCmder {
 '@
 
     $settingsXml.Save($settingsPath)
+}
+
+function InvokeAndIgnoreStdErr {
+    param
+    (
+        [Parameter(Mandatory)]
+        [ScriptBlock] $ScriptBlock
+    )
+
+    $backupErrorActionPreference = $ErrorActionPreference
+    $ErrorActionPreference = [System.Management.Automation.ActionPreference]::Continue
+    try {
+        & $ScriptBlock 2>&1 | ForEach-Object -Process {
+            "$_"
+        }
+    }
+    finally {
+        $ErrorActionPreference = backupErrorActionPreference
+    }
 }
 
 Main
