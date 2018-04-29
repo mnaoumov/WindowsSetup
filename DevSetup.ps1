@@ -41,6 +41,7 @@ function Main {
 
         Install-PackageProvider -Name NuGet -Force
         Install-Module -Name posh-git -Force -AllowClobber
+        Install-Module -Name SqlServer -Force -AllowClobber
 
         if (Test-PendingReboot) {
             Invoke-Reboot
@@ -61,9 +62,6 @@ function Main {
             git config user.name $settings.FullName
         }
 
-        $credential = New-Object -TypeName PScredential -ArgumentList @('Vince', (ConvertTo-SecureString -String $settings.DBBackupPassword -AsPlainText -Force))
-        Invoke-WebRequest -Credential $credential -UseBasicParsing -Uri http://148.251.185.130:9080/DBBackup/VTA70.bak -OutFile C:\Dev\VTA70.bak
-
         PinToTaskBar -ApplicationPath 'C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\devenv.exe'
         PinToTaskBar -ApplicationPath 'C:\Program Files\Microsoft VS Code\Code.exe'
         PinToTaskBar -ApplicationPath 'c:\tools\cmder\Cmder.exe'
@@ -73,6 +71,8 @@ function Main {
         UnpinFromTaskBar -ApplicationPath '%SystemRoot%\system32\ServerManager.exe'
 
         ConfigureCmder
+
+        RestoreDatabase
     }
 }
 
@@ -209,6 +209,16 @@ function InvokeAndIgnoreStdErr {
     finally {
         $ErrorActionPreference = backupErrorActionPreference
     }
+}
+
+function RestoreDatabase {
+    $dbBackupPath = 'C:\Dev\VTA70.bak'
+    if (Test-Path -Path $dbBackupPath) {
+        return
+    }
+
+    $credential = New-Object -TypeName PScredential -ArgumentList @('Vince', (ConvertTo-SecureString -String $settings.DBBackupPassword -AsPlainText -Force))
+    Invoke-WebRequest -Credential $credential -UseBasicParsing -Uri http://148.251.185.130:9080/DBBackup/VTA70.bak -OutFile C:\Dev\VTA70.bak
 }
 
 Main
