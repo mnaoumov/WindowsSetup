@@ -38,6 +38,7 @@ function Main {
         Install-ChocolateyPackage -Name resharper
         Install-ChocolateyPackage -Name GoogleChrome
         Install-ChocolateyPackage -Name Firefox
+        Install-ChocolateyPackage -Name fiddler4
 
         Install-WindowsFeature -Name Web-Server, Web-Mgmt-Console, Web-Scripting-Tools, Web-Asp-Net45
 
