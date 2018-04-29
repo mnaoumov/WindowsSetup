@@ -219,6 +219,9 @@ function RestoreDatabase {
 
     $credential = New-Object -TypeName PScredential -ArgumentList @('DBBackup', (ConvertTo-SecureString -String $settings.DBBackupPassword -AsPlainText -Force))
     Invoke-WebRequest -Credential $credential -UseBasicParsing -Uri http://148.251.185.130:9080/DBBackup/VTA70.bak -OutFile C:\Dev\VTA70.bak
+
+    Import-Module -Name SqlServer
+
 }
 
 Main
