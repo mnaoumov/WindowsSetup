@@ -28,8 +28,22 @@ function Main {
         choco install gitextensions -y
         choco install kdiff3 -y
         choco install cmder -y
+
+        if (Test-PendingReboot) {
+            Invoke-Reboot
+        }
         choco install sql-server-2017 -y
+
+        if (Test-PendingReboot) {
+            Invoke-Reboot
+        }
+
         choco install visualstudio2017community -y
+
+        if (Test-PendingReboot) {
+            Invoke-Reboot
+        }
+
         choco install resharper -y
         choco install GoogleChrome -y
         choco install Firefox -y
