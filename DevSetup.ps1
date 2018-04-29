@@ -28,7 +28,7 @@ function Main {
         Install-ChocolateyPackage -Name gitextensions
         Install-ChocolateyPackage -Name kdiff3
         Install-ChocolateyPackage -Name cmder
-        Install-ChocolateyPackage -Name sql-server-2017
+        Install-ChocolateyPackage -Name sql-server-2017 -AdditionalArguments "/SAPWD=Password13579! /SECURITYMODE=SQL"
         Install-ChocolateyPackage -Name sql-server-management-studio
         Install-ChocolateyPackage -Name visualstudio2017community
         Install-ChocolateyPackage -Name visualstudio2017-workload-netweb
@@ -132,7 +132,9 @@ function Install-ChocolateyPackage {
     param
     (
         [Parameter(Mandatory)]
-        [string] $Name
+        [string] $Name,
+
+        [string] $AdditionalArguments
     )
 
     $cacheFolder = "$env:UserProfile\AppData\Local\ChocoCache"
@@ -144,7 +146,7 @@ function Install-ChocolateyPackage {
         Invoke-Reboot
     }
 
-    choco install $Name -y --cacheLocation $cacheFolder
+    choco install $Name -y --cacheLocation $cacheFolder $AdditionalArguments
 
     if (Test-PendingReboot) {
         Invoke-Reboot
