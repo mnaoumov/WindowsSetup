@@ -19,7 +19,7 @@ function Main {
 
         $securePassword = ConvertTo-SecureString -String $settings.WindowsPassword -AsPlainText -Force
         $credential = New-Object -TypeName PSCredential -ArgumentList @($env:USERNAME, $securePassword)
-        Install-BoxStarterPackage -PackageName $PSCommandPath -Credential $credential
+        Install-BoxStarterPackage -PackageName $PSCommandPath -Credential $credential -Verbose
     }
     else {
         Install-ChocolateyPackage -Name powershell
