@@ -40,6 +40,8 @@ function Main {
 
         Install-WindowsFeature -Name Web-Server, Web-Mgmt-Console, Web-Scripting-Tools, Web-Asp-Net45
 
+        Install-PackageProvider -Name NuGet -Force
+        Install-Module -Name posh-git -Force -AllowClobber
         if (Test-PendingReboot) {
             Invoke-Reboot
         }
