@@ -129,4 +129,27 @@ function Test-InsideBoxstarterInstall {
     (Test-Path -Path Variable:Boxstarter) -and $Boxstarter.ContainsKey('SourcePID')
 }
 
+function Install-ChocolateyPackage {
+    param
+    (
+        [Parameter(Mandatory)]
+        [string] $Name
+    )
+
+    $cacheFolder = "$env:UserProfile\AppData\Local\ChocoCache"
+    if (-not (Test-Path -Path $cacheFolder)) {
+        New-Item -Path $cacheFolder -ItemType Directory | Out-Null
+    }
+
+    if (Test-PendingReboot) {
+        Invoke-Reboot
+    }
+
+    choco install $Name -y --cacheLocation $cacheFolder
+
+    if (Test-PendingReboot) {
+        Invoke-Reboot
+    }
+}
+
 Main
