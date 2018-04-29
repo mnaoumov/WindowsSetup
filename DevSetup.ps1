@@ -28,12 +28,9 @@ function Main {
         Install-ChocolateyPackage -Name gitextensions
         Install-ChocolateyPackage -Name kdiff3
         Install-ChocolateyPackage -Name cmder
-
         Install-ChocolateyPackage -Name sql-server-2017
         Install-ChocolateyPackage -Name sql-server-management-studio
-
         Install-ChocolateyPackage -Name visualstudio2017community
-
         Install-ChocolateyPackage -Name visualstudio2017-workload-netweb
         Install-ChocolateyPackage -Name resharper
         Install-ChocolateyPackage -Name GoogleChrome
@@ -44,6 +41,7 @@ function Main {
 
         Install-PackageProvider -Name NuGet -Force
         Install-Module -Name posh-git -Force -AllowClobber
+
         if (Test-PendingReboot) {
             Invoke-Reboot
         }
