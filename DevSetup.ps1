@@ -53,7 +53,7 @@ function Main {
             cmdkey /generic:git:https://git.voliasoftware.com "/user:$($settings.Email)" "/pass:$($settings.GitLabPassword)"
             cmdkey "/generic:git:https://$($settings.Email)@git.voliasoftware.com" "/user:$($settings.Email)" "/pass:$($settings.GitLabPassword)"
     
-            git clone https://git.voliasoftware.com/risc/riscvta.git RISC
+            git clone https://git.voliasoftware.com/risc/riscvta.git RISC --quiet
             Set-Location -Path RISC
             git config user.email $settings.Email
             git config user.name $settings.FullName
