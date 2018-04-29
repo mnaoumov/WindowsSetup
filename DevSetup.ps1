@@ -22,34 +22,21 @@ function Main {
         Install-BoxStarterPackage -PackageName $PSCommandPath -Credential $credential
     }
     else {
-        choco install powershell -y
-        choco install visualstudiocode -y
-        choco install git -y
-        choco install gitextensions -y
-        choco install kdiff3 -y
-        choco install cmder -y
+        Install-ChocolateyPackage -Name powershell
+        Install-ChocolateyPackage -Name visualstudiocode
+        Install-ChocolateyPackage -Name git
+        Install-ChocolateyPackage -Name gitextensions
+        Install-ChocolateyPackage -Name kdiff3
+        Install-ChocolateyPackage -Name cmder
 
-        if (Test-PendingReboot) {
-            Invoke-Reboot
-        }
+        Install-ChocolateyPackage -Name sql-server-2017
+        Install-ChocolateyPackage -Name sql-server-management-studio
 
-        choco install sql-server-2017 -y
-        choco install sql-server-management-studio -y
+        Install-ChocolateyPackage -Name visualstudio2017community
 
-        if (Test-PendingReboot) {
-            Invoke-Reboot
-        }
-
-        choco install visualstudio2017community -y
-
-        if (Test-PendingReboot) {
-            Invoke-Reboot
-        }
-
-        choco install resharper -y
-        choco install GoogleChrome -y
-        choco install Firefox -y
-
+        Install-ChocolateyPackage -Name resharper
+        Install-ChocolateyPackage -Name GoogleChrome
+        Install-ChocolateyPackage -Name Firefox
 
         Install-WindowsFeature -Name Web-Server, Web-Mgmt-Console, Web-Scripting-Tools, Web-Asp-Net45
 
