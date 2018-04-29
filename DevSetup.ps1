@@ -64,6 +64,8 @@ function Main {
         PinToTaskBar -ApplicationPath 'C:\Program Files\Microsoft VS Code\Code.exe'
         PinToTaskBar -ApplicationPath 'c:\tools\cmder\Cmder.exe'
         PinToTaskBar -ApplicationPath 'C:\Program Files (x86)\Microsoft SQL Server\140\Tools\Binn\ManagementStudio\Ssms.exe'
+
+        ConfigureCmder
     }
 }
 
@@ -156,4 +158,16 @@ function PinToTaskBar {
     
     & $syspinPath $ApplicationPath 'c:"Pin to taskbar"'
 }
+
+function ConfigureCmder {
+    $settingsPath = 'C:\tools\cmder\vendor\conemu-maximus5\ConEmu.xml'
+    $settingsXml = [xml] (Get-Content -Path $settingsPath)
+    $settingsXml.SelectSingleNode("/key[@name='Software']/key[@name='ConEmu']/key[@name='.Vanilla']/value[@name='StartTasksName']").data = '{Powershell::PowerShell as Admin}'
+    $settingsXml.SelectSingleNode("/key[@name='Software']/key[@name='ConEmu']/key[@name='.Vanilla']/key[@name='Tasks']/key[value/@data='{Powershell::PowerShell as Admin}']/value[@name='Cmd1']").data = @'
+-new_console:d:C:\Dev\RISC PowerShell -ExecutionPolicy Bypass -NoLogo -NoProfile -NoExit -Command "Invoke-Expression '. ''%ConEmuDir%\..\profile.ps1'''"
+'@
+
+    $settingsXml.Save($settingsPath)
+}
+
 Main
