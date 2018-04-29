@@ -61,9 +61,14 @@ function Main {
 
         $credential = New-Object -TypeName PScredential -ArgumentList @('Vince', (ConvertTo-SecureString -String $settings.DBBackupPassword -AsPlainText -Force))
         Invoke-WebRequest -Credential $credential -UseBasicParsing -Uri http://148.251.185.130:9080/DBBackup/VTA70.bak -OutFile C:\Dev\VTA70.bak
+
+        PinToTaskBar -ApplicationPath 'C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\devenv.exe'
         PinToTaskBar -ApplicationPath 'C:\Program Files\Microsoft VS Code\Code.exe'
         PinToTaskBar -ApplicationPath 'c:\tools\cmder\Cmder.exe'
         PinToTaskBar -ApplicationPath 'C:\Program Files (x86)\Microsoft SQL Server\140\Tools\Binn\ManagementStudio\Ssms.exe'
+        PinToTaskBar -ApplicationPath 'C:\Program Files\Internet Explorer\iexplore.exe'
+        UnpinFromTaskBar -ApplicationPath '%SystemRoot%\system32\WindowsPowerShell\v1.0\powershell.exe'
+        UnpinFromTaskBar -ApplicationPath '%SystemRoot%\system32\ServerManager.exe'
 
         ConfigureCmder
     }
@@ -157,6 +162,21 @@ function PinToTaskBar {
     }
     
     & $syspinPath $ApplicationPath 'c:"Pin to taskbar"'
+}
+
+function UnpinFromTaskBar {
+    param
+    (
+        [Parameter(Mandatory)]
+        [string] $ApplicationPath
+    )
+
+    $syspinPath = "$Env:USERPROFILE\syspin.exe"
+    if (-not (Test-Path -Path $syspinPath)) {
+        Invoke-WebRequest -UseBasicParsing -Uri http://www.technosys.net/download.aspx?file=syspin.exe -OutFile $syspinPath
+    }
+    
+    & $syspinPath $ApplicationPath 'c:"Unpin from taskbar"'
 }
 
 function ConfigureCmder {
