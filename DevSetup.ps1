@@ -34,6 +34,7 @@ function Main {
 
         Install-ChocolateyPackage -Name visualstudio2017community
 
+        Install-ChocolateyPackage -Name visualstudio2017-workload-netweb
         Install-ChocolateyPackage -Name resharper
         Install-ChocolateyPackage -Name GoogleChrome
         Install-ChocolateyPackage -Name Firefox
