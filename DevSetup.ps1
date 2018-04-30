@@ -32,11 +32,11 @@ function Main {
 
     Install-PackageProvider -Name NuGet -Force
 
-    if (-not (Get-Module -Name posh-git)) {
+    if (-not (Get-Module -Name posh-git -ListAvailable)) {
         Install-Module -Name posh-git -Force -AllowClobber
     }
 
-    if (-not (Get-Module -Name SqlServer)) {
+    if (-not (Get-Module -Name SqlServer -ListAvailable)) {
         Install-Module -Name SqlServer -Force -AllowClobber
     }
 
