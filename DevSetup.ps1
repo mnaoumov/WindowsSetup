@@ -72,6 +72,8 @@ function Main {
         ConfigureCmder
 
         RestoreDatabase
+
+        ConfigureIis
     }
 }
 
@@ -241,6 +243,12 @@ function RestoreDatabase {
     }
 
     Restore-SqlDatabase -ServerInstance . -Database VTA70 -BackupFile C:\dev\VTA70.bak -RelocateFile $relocateFiles
+}
+
+function ConfigureIis {
+    New-WebAppPool -Name RISC
+    Set-ItemProperty -Path IIS:\AppPools\RISC -Name enable32BitAppOnWin64 -Value true
+    New-WebApplication -Site 'Default Web Site' -Name RISC -PhysicalPath C:\Dev\RISC\Risc.VTA.BackOffice.WebSite -ApplicationPool RISC
 }
 
 Main
