@@ -332,4 +332,21 @@ function DownloadDevSetupFile {
     $resultFile
 }
 
+function Install-Msi {
+    param
+    (
+        [Parameter(Mandatory)]
+        [string] $InstallerPath,
+
+        [string[]] $AdditionalArguments
+    )
+
+    $arguments = @('/i', $InstallerPath, '/qn')
+    if ($AdditionalArguments -ne $null) {
+        $arguments += $AdditionalArguments
+    }
+
+    Start-Process -FilePath msiexec.exe -ArgumentList $arguments -Wait
+}
+
 Main
