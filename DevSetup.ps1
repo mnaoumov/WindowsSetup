@@ -79,6 +79,9 @@ function Main {
         Install-FoxPro
         Install-AceCrypt
         Install-CrystalReports
+
+        C:\Dev\RISC\tools\Update-Database.ps1
+        C:\Dev\RISC\tools\Build.ps1
     }
 }
 
