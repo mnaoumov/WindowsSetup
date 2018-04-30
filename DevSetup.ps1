@@ -209,7 +209,7 @@ function InvokeAndIgnoreStdErr {
         }
     }
     finally {
-        $ErrorActionPreference = backupErrorActionPreference
+        $ErrorActionPreference = $backupErrorActionPreference
     }
 }
 
