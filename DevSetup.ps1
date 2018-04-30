@@ -265,6 +265,8 @@ function RestoreDatabase {
 }
 
 function ConfigureIis {
+    Import-Module -Name WebAdministration
+
     if (Test-Path -Path IIS:\AppPools\RISC) {
         return
     }
