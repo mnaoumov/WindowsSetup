@@ -299,7 +299,7 @@ function Install-CrystalReports {
         return
     }
 
-    $filePath = DownloadDevSetupFile -FileName CRRedist2008_x86 -DestinationFile $filePath
+    $filePath = DownloadDevSetupFile -FileName CRRedist2008_x86
 
     Import-Module -Name C:\ProgramData\chocolatey\helpers\chocolateyInstaller.psm1
     Install-ChocolateyPackage -packageName 'Crystal Reports Basic Runtime for Visual Studio 2008' -fileType 'msi' -file $filePath -silentArgs '/qn'
