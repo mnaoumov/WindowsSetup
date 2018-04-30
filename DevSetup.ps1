@@ -283,6 +283,9 @@ function Install-FoxPro {
 
     $filePath = DownloadDevSetupFile -FileName VFPOLEDBSetup.msi
     Install-Msi -InstallerPath $filePath -AdditionalArguments 'FolderForm_AllUsers=ALL'
+
+    $filePath = DownloadDevSetupFile -FileName VFPODBC.msi
+    Install-Msi -InstallerPath $filePath
 }
 
 function Install-AceCrypt {
