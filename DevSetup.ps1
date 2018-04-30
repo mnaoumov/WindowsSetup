@@ -72,9 +72,9 @@ function Main {
 
         ConfigureCmder
 
-        RestoreDatabase
-
         ConfigureIis
+
+        RestoreDatabase
     }
 }
 
