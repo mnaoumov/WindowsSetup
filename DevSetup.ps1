@@ -12,77 +12,68 @@ trap { throw $Error[0] }
 function Main {
     EnsureRunningAsAdmin
     $settings = InitSetupSettings
+    EnsureRunningInBoxstarter
 
-    if (-not (Test-InsideBoxstarterInstall)) {
-        ConfigurePowerShellPolicy
-        Install-BoxStarter
+    Install-ChocolateyPackage -Name powershell
+    Install-ChocolateyPackage -Name visualstudiocode
+    Install-ChocolateyPackage -Name git
+    Install-ChocolateyPackage -Name gitextensions
+    Install-ChocolateyPackage -Name kdiff3
+    Install-ChocolateyPackage -Name cmder
+    Install-ChocolateyPackage -Name sql-server-2017 -CustomParams '/SAPWD=Password13579! /SECURITYMODE=SQL'
+    Install-ChocolateyPackage -Name sql-server-management-studio
+    Install-ChocolateyPackage -Name visualstudio2017community
+    Install-ChocolateyPackage -Name visualstudio2017-workload-netweb
+    Install-ChocolateyPackage -Name resharper
+    Install-ChocolateyPackage -Name GoogleChrome
+    Install-ChocolateyPackage -Name Firefox
 
-        $securePassword = ConvertTo-SecureString -String $settings.WindowsPassword -AsPlainText -Force
-        $credential = New-Object -TypeName PSCredential -ArgumentList @($env:USERNAME, $securePassword)
-        Install-BoxStarterPackage -PackageName $PSCommandPath -Credential $credential -Verbose
+    Install-WindowsFeature -Name Web-Server, Web-Mgmt-Console, Web-Scripting-Tools, Web-Asp-Net45
+
+    Install-PackageProvider -Name NuGet -Force
+    Install-Module -Name posh-git -Force -AllowClobber
+    Install-Module -Name SqlServer -Force -AllowClobber
+
+    if (Test-PendingReboot) {
+        Invoke-Reboot
     }
-    else {
-        Install-ChocolateyPackage -Name powershell
-        Install-ChocolateyPackage -Name visualstudiocode
-        Install-ChocolateyPackage -Name git
-        Install-ChocolateyPackage -Name gitextensions
-        Install-ChocolateyPackage -Name kdiff3
-        Install-ChocolateyPackage -Name cmder
-        Install-ChocolateyPackage -Name sql-server-2017 -CustomParams '/SAPWD=Password13579! /SECURITYMODE=SQL'
-        Install-ChocolateyPackage -Name sql-server-management-studio
-        Install-ChocolateyPackage -Name visualstudio2017community
-        Install-ChocolateyPackage -Name visualstudio2017-workload-netweb
-        Install-ChocolateyPackage -Name resharper
-        Install-ChocolateyPackage -Name GoogleChrome
-        Install-ChocolateyPackage -Name Firefox
 
-        Install-WindowsFeature -Name Web-Server, Web-Mgmt-Console, Web-Scripting-Tools, Web-Asp-Net45
-
-        Install-PackageProvider -Name NuGet -Force
-        Install-Module -Name posh-git -Force -AllowClobber
-        Install-Module -Name SqlServer -Force -AllowClobber
-
-        if (Test-PendingReboot) {
-            Invoke-Reboot
-        }
-
-        if (-not (Test-Path -Path C:\Dev)) {
-            New-Item -Path C:\Dev -ItemType Directory | Out-Null
-        }
-
-        git config --global user.email $settings.Email
-        git config --global user.name $settings.FullName
-
-        if (-not (Test-Path -Path C:\Dev\RISC)) {
-            Set-Location -Path C:\Dev
-            cmdkey /generic:git:https://git.voliasoftware.com "/user:$($settings.Email)" "/pass:$($settings.GitLabPassword)"
-            cmdkey "/generic:git:https://$($settings.Email)@git.voliasoftware.com" "/user:$($settings.Email)" "/pass:$($settings.GitLabPassword)"
-    
-            InvokeAndIgnoreStdErr -ScriptBlock { git clone https://git.voliasoftware.com/risc/riscvta.git RISC --progress }
-        }
-
-        PinToTaskBar -ApplicationPath 'C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\devenv.exe'
-        PinToTaskBar -ApplicationPath 'C:\Program Files\Microsoft VS Code\Code.exe'
-        PinToTaskBar -ApplicationPath 'c:\tools\cmder\Cmder.exe'
-        PinToTaskBar -ApplicationPath 'C:\Program Files (x86)\Microsoft SQL Server\140\Tools\Binn\ManagementStudio\Ssms.exe'
-        PinToTaskBar -ApplicationPath 'C:\Program Files\Internet Explorer\iexplore.exe'
-        PinToTaskBar -ApplicationPath 'C:\Program Files (x86)\GitExtensions\GitExtensions.exe'
-        UnpinFromTaskBar -ApplicationPath '%SystemRoot%\system32\WindowsPowerShell\v1.0\powershell.exe'
-        UnpinFromTaskBar -ApplicationPath '%SystemRoot%\system32\ServerManager.exe'
-
-        ConfigureCmder
-
-        ConfigureIis
-
-        RestoreDatabase
-
-        Install-FoxPro
-        Install-AceCrypt
-        Install-CrystalReports
-
-        C:\Dev\RISC\tools\Update-Database.ps1
-        C:\Dev\RISC\tools\Build.ps1
+    if (-not (Test-Path -Path C:\Dev)) {
+        New-Item -Path C:\Dev -ItemType Directory | Out-Null
     }
+
+    git config --global user.email $settings.Email
+    git config --global user.name $settings.FullName
+
+    if (-not (Test-Path -Path C:\Dev\RISC)) {
+        Set-Location -Path C:\Dev
+        cmdkey /generic:git:https://git.voliasoftware.com "/user:$($settings.Email)" "/pass:$($settings.GitLabPassword)"
+        cmdkey "/generic:git:https://$($settings.Email)@git.voliasoftware.com" "/user:$($settings.Email)" "/pass:$($settings.GitLabPassword)"
+
+        InvokeAndIgnoreStdErr -ScriptBlock { git clone https://git.voliasoftware.com/risc/riscvta.git RISC --progress }
+    }
+
+    PinToTaskBar -ApplicationPath 'C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\devenv.exe'
+    PinToTaskBar -ApplicationPath 'C:\Program Files\Microsoft VS Code\Code.exe'
+    PinToTaskBar -ApplicationPath 'c:\tools\cmder\Cmder.exe'
+    PinToTaskBar -ApplicationPath 'C:\Program Files (x86)\Microsoft SQL Server\140\Tools\Binn\ManagementStudio\Ssms.exe'
+    PinToTaskBar -ApplicationPath 'C:\Program Files\Internet Explorer\iexplore.exe'
+    PinToTaskBar -ApplicationPath 'C:\Program Files (x86)\GitExtensions\GitExtensions.exe'
+    UnpinFromTaskBar -ApplicationPath '%SystemRoot%\system32\WindowsPowerShell\v1.0\powershell.exe'
+    UnpinFromTaskBar -ApplicationPath '%SystemRoot%\system32\ServerManager.exe'
+
+    ConfigureCmder
+
+    ConfigureIis
+
+    RestoreDatabase
+
+    Install-FoxPro
+    Install-AceCrypt
+    Install-CrystalReports
+
+    C:\Dev\RISC\tools\Update-Database.ps1
+    C:\Dev\RISC\tools\Build.ps1
 }
 
 function EnsureRunningAsAdmin {
@@ -302,6 +293,20 @@ function Install-CrystalReports {
     Invoke-WebRequest -Credential $credential -UseBasicParsing -Uri http://148.251.185.130:9080/DevSetup/CRRedist2008_x86.msi -OutFile $file
     Import-Module -Name C:\ProgramData\chocolatey\helpers\chocolateyInstaller.psm1
     Install-ChocolateyPackage -packageName 'Crystal Reports Basic Runtime for Visual Studio 2008' -fileType 'msi' -file $file -checksum C931B3CBA27BA9289F502CB98CB2A5C8 -silentArgs '/qn'
+}
+
+function EnsureRunningInBoxstarter {
+    if (Test-InsideBoxstarterInstall) {
+        return
+    }
+
+    ConfigurePowerShellPolicy
+    Install-BoxStarter
+
+    $securePassword = ConvertTo-SecureString -String $settings.WindowsPassword -AsPlainText -Force
+    $credential = New-Object -TypeName PSCredential -ArgumentList @($env:USERNAME, $securePassword)
+    Install-BoxStarterPackage -PackageName $PSCommandPath -Credential $credential -Verbose
+    exit
 }
 
 
