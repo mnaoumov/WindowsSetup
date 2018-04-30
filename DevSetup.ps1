@@ -50,15 +50,15 @@ function Main {
             New-Item -Path C:\Dev -ItemType Directory | Out-Null
         }
 
+        git config --global user.email $settings.Email
+        git config --global user.name $settings.FullName
+
         if (-not (Test-Path -Path C:\Dev\RISC)) {
             Set-Location -Path C:\Dev
             cmdkey /generic:git:https://git.voliasoftware.com "/user:$($settings.Email)" "/pass:$($settings.GitLabPassword)"
             cmdkey "/generic:git:https://$($settings.Email)@git.voliasoftware.com" "/user:$($settings.Email)" "/pass:$($settings.GitLabPassword)"
     
             InvokeAndIgnoreStdErr -ScriptBlock { git clone https://git.voliasoftware.com/risc/riscvta.git RISC --progress }
-            Set-Location -Path C:\Dev\RISC
-            git config user.email $settings.Email
-            git config user.name $settings.FullName
         }
 
         PinToTaskBar -ApplicationPath 'C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\devenv.exe'
