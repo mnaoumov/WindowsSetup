@@ -117,7 +117,7 @@ function InitSetupSettings {
             Email            = Read-Host -Prompt 'Enter Your Email'
             GitLabPassword   = Read-Host -Prompt 'Enter Your GitLab Password'
             WindowsPassword  = Read-Host -Prompt 'Enter Your Windows Password'
-            DBBackupPassword = Read-Host -Prompt 'Enter Password for DBBackup download (ask your team lead)'
+            DevSetupPassword = Read-Host -Prompt 'Enter Password for DevSetup download (ask your team lead)'
         }
 
         $settings | ConvertTo-Json | Out-File -FilePath $settingsFile
@@ -222,8 +222,8 @@ function RestoreDatabase {
         return
     }
 
-    $credential = New-Object -TypeName PScredential -ArgumentList @('DBBackup', (ConvertTo-SecureString -String $settings.DBBackupPassword -AsPlainText -Force))
-    Invoke-WebRequest -Credential $credential -UseBasicParsing -Uri http://148.251.185.130:9080/DBBackup/VTA70.bak -OutFile C:\Dev\VTA70.bak
+    $credential = New-Object -TypeName PScredential -ArgumentList @('DevSetup', (ConvertTo-SecureString -String $settings.DevSetupPassword -AsPlainText -Force))
+    Invoke-WebRequest -Credential $credential -UseBasicParsing -Uri http://148.251.185.130:9080/DevSetup/VTA70.bak -OutFile C:\Dev\VTA70.bak
 
     Import-Module -Name SqlServer
 
