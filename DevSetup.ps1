@@ -277,7 +277,7 @@ function ConfigureIis {
 }
 
 function Install-FoxPro {
-    if (Get-ItemProperty -Path Registry::HKEY_LOCAL_MACHINE\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* | Where-Object DisplayName -eq 'Microsoft Visual FoxPro OLE DB Provider') {
+    if (Get-ItemProperty -Path Registry::HKEY_LOCAL_MACHINE\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* -Name DisplayName -ErrorAction SilentlyContinue | Where-Object DisplayName -eq 'Microsoft Visual FoxPro OLE DB Provider') {
         return
     }
 
