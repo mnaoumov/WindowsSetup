@@ -230,8 +230,8 @@ function RestoreDatabase {
         return
     }
 
-    $credential = New-Object -TypeName PScredential -ArgumentList @('DevSetup', (ConvertTo-SecureString -String $settings.DevSetupPassword -AsPlainText -Force))
-    Invoke-WebRequest -Credential $credential -UseBasicParsing -Uri http://148.251.185.130:9080/DevSetup/VTA70.bak -OutFile C:\Dev\VTA70.bak
+    $filePath = DownloadDevSetupFile -FileName VTA70.bak
+    Move-Item -Path $filePath -Destination C:\Dev
 
     Import-Module -Name SqlServer
 
@@ -290,9 +290,8 @@ function Install-AceCrypt {
         return
     }
 
-    $credential = New-Object -TypeName PScredential -ArgumentList @('DevSetup', (ConvertTo-SecureString -String $settings.DevSetupPassword -AsPlainText -Force))
-    Invoke-WebRequest -Credential $credential -UseBasicParsing -Uri http://148.251.185.130:9080/DevSetup/AceCrypt.dll -OutFile C:\Dev\AceCrypt.dll
-    regsvr32.exe C:\Dev\AceCrypt.dll /s
+    $filePath = DownloadDevSetupFile -FileName AceCrypt.dll
+    regsvr32.exe $filePath /s
 }
 
 function Install-CrystalReports {
@@ -300,11 +299,10 @@ function Install-CrystalReports {
         return
     }
 
-    $credential = New-Object -TypeName PScredential -ArgumentList @('DevSetup', (ConvertTo-SecureString -String $settings.DevSetupPassword -AsPlainText -Force))
-    $file = 'C:\Dev\CRRedist2008_x86.msi'
-    Invoke-WebRequest -Credential $credential -UseBasicParsing -Uri http://148.251.185.130:9080/DevSetup/CRRedist2008_x86.msi -OutFile $file
+    $filePath = DownloadDevSetupFile -FileName CRRedist2008_x86 -DestinationFile $filePath
+
     Import-Module -Name C:\ProgramData\chocolatey\helpers\chocolateyInstaller.psm1
-    Install-ChocolateyPackage -packageName 'Crystal Reports Basic Runtime for Visual Studio 2008' -fileType 'msi' -file $file -checksum C931B3CBA27BA9289F502CB98CB2A5C8 -silentArgs '/qn'
+    Install-ChocolateyPackage -packageName 'Crystal Reports Basic Runtime for Visual Studio 2008' -fileType 'msi' -file $filePath -silentArgs '/qn'
 }
 
 function EnsureRunningInBoxstarter {
@@ -321,5 +319,17 @@ function EnsureRunningInBoxstarter {
     exit
 }
 
+function DownloadDevSetupFile {
+    param
+    (
+        [Parameter(Mandatory)]
+        [string] $FileName
+    )
+
+    $resultFile = "$Env:TEMP\$FileName"
+    $credential = New-Object -TypeName PScredential -ArgumentList @('DevSetup', (ConvertTo-SecureString -String $settings.DevSetupPassword -AsPlainText -Force))
+    Invoke-WebRequest -Credential $credential -UseBasicParsing -Uri "http://148.251.185.130:9080/DevSetup/$FileName" -OutFile $resultFile
+    $resultFile
+}
 
 Main
