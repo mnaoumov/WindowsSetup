@@ -191,7 +191,11 @@ function UnpinFromTaskBar {
 
 function ConfigureCmder {
     $settingsPath = 'C:\tools\cmder\vendor\conemu-maximus5\ConEmu.xml'
-    Copy-Item -Path C:\tools\cmder\config\ConEmu.xml -Destination $settingsPath -Force
+    if (Test-Path -Path $settingsPath) {
+        return
+    }
+
+    Copy-Item -Path C:\tools\cmder\config\ConEmu.xml -Destination $settingsPath
     $settingsXml = [xml] (Get-Content -Path $settingsPath)
     $settingsXml.SelectSingleNode("/key[@name='Software']/key[@name='ConEmu']/key[@name='.Vanilla']/value[@name='StartTasksName']").data = '{Powershell::PowerShell as Admin}'
     $settingsXml.SelectSingleNode("/key[@name='Software']/key[@name='ConEmu']/key[@name='.Vanilla']/key[@name='Tasks']/key[value/@data='{Powershell::PowerShell as Admin}']/value[@name='Cmd1']").data = @'
