@@ -274,6 +274,7 @@ function Install-FoxPro {
         return
     }
 
+    Import-Module -Name C:\ProgramData\chocolatey\helpers\chocolateyInstaller.psm1
     Install-ChocolateyPackage -packageName 'Microsoft Visual FoxPro OLE DB Provider' -fileType 'msi' -url 'https://download.microsoft.com/download/b/f/b/bfbfa4b8-7f91-4649-8dab-9a6476360365/VFPOLEDBSetup.msi' -checksum 6BD83EA30714DC1641BF739447539720 -silentArgs '/qn FolderForm_AllUsers=ALL'
 }
 
