@@ -56,7 +56,7 @@ function Main {
             cmdkey "/generic:git:https://$($settings.Email)@git.voliasoftware.com" "/user:$($settings.Email)" "/pass:$($settings.GitLabPassword)"
     
             InvokeAndIgnoreStdErr -ScriptBlock { git clone https://git.voliasoftware.com/risc/riscvta.git RISC --progress }
-            Set-Location -Path RISC
+            Set-Location -Path C:\Dev\RISC
             git config user.email $settings.Email
             git config user.name $settings.FullName
         }
