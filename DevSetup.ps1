@@ -75,6 +75,8 @@ function Main {
         ConfigureIis
 
         RestoreDatabase
+
+        Install-FoxPro
     }
 }
 
@@ -264,6 +266,14 @@ function ConfigureIis {
     New-WebAppPool -Name RISC
     Set-ItemProperty -Path IIS:\AppPools\RISC -Name enable32BitAppOnWin64 -Value true
     New-WebApplication -Site 'Default Web Site' -Name RISC -PhysicalPath C:\Dev\RISC\Risc.VTA.BackOffice.WebSite -ApplicationPool RISC
+}
+
+function Install-FoxPro {
+    if (Get-ItemProperty -Path Registry::HKEY_LOCAL_MACHINE\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* | Where-Object DisplayName -eq 'Microsoft Visual FoxPro OLE DB Provider') {
+        return
+    }
+
+    Install-ChocolateyPackage -packageName 'Microsoft Visual FoxPro OLE DB Provider' -fileType 'msi' -url 'https://download.microsoft.com/download/b/f/b/bfbfa4b8-7f91-4649-8dab-9a6476360365/VFPOLEDBSetup.msi' -checksum 6BD83EA30714DC1641BF739447539720 -silentArgs '/qn FolderForm_AllUsers=ALL'
 }
 
 Main
