@@ -78,6 +78,7 @@ function Main {
 
         Install-FoxPro
         Install-AceCrypt
+        Install-CrystalReports
     }
 }
 
@@ -287,5 +288,18 @@ function Install-AceCrypt {
     Invoke-WebRequest -Credential $credential -UseBasicParsing -Uri http://148.251.185.130:9080/DevSetup/AceCrypt.dll -OutFile C:\Dev\AceCrypt.dll
     regsvr32.exe C:\Dev\AceCrypt.dll /s
 }
+
+function Install-CrystalReports {
+    if (Test-Path -Path 'C:\Program Files (x86)\Business Objects\Common\2.8\bin') {
+        return
+    }
+
+    $credential = New-Object -TypeName PScredential -ArgumentList @('DevSetup', (ConvertTo-SecureString -String $settings.DevSetupPassword -AsPlainText -Force))
+    $file = 'C:\Dev\CRRedist2008_x86.msi'
+    Invoke-WebRequest -Credential $credential -UseBasicParsing -Uri http://148.251.185.130:9080/DevSetup/CRRedist2008_x86.msi -OutFile $file
+    Import-Module -Name C:\ProgramData\chocolatey\helpers\chocolateyInstaller.psm1
+    Install-ChocolateyPackage -packageName 'Crystal Reports Basic Runtime for Visual Studio 2008' -fileType 'msi' -file $file -checksum C931B3CBA27BA9289F502CB98CB2A5C8 -silentArgs '/qn'
+}
+
 
 Main
