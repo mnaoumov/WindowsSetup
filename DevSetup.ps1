@@ -77,6 +77,7 @@ function Main {
         RestoreDatabase
 
         Install-FoxPro
+        Install-AceCrypt
     }
 }
 
@@ -274,6 +275,16 @@ function Install-FoxPro {
     }
 
     Install-ChocolateyPackage -packageName 'Microsoft Visual FoxPro OLE DB Provider' -fileType 'msi' -url 'https://download.microsoft.com/download/b/f/b/bfbfa4b8-7f91-4649-8dab-9a6476360365/VFPOLEDBSetup.msi' -checksum 6BD83EA30714DC1641BF739447539720 -silentArgs '/qn FolderForm_AllUsers=ALL'
+}
+
+function Install-AceCrypt {
+    if (Test-Path -Path 'Registry::HKEY_CLASSES_ROOT\Wow6432Node\CLSID\{F783E66E-761E-11D4-8CE2-AF310264C746}') {
+        return
+    }
+
+    $credential = New-Object -TypeName PScredential -ArgumentList @('DevSetup', (ConvertTo-SecureString -String $settings.DevSetupPassword -AsPlainText -Force))
+    Invoke-WebRequest -Credential $credential -UseBasicParsing -Uri http://148.251.185.130:9080/DevSetup/AceCrypt.dll -OutFile C:\Dev\AceCrypt.dll
+    regsvr32.exe C:\Dev\AceCrypt.dll /s
 }
 
 Main
