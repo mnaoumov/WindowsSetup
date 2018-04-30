@@ -231,7 +231,7 @@ function RestoreDatabase {
     }
 
     $filePath = DownloadDevSetupFile -FileName VTA70.bak
-    Move-Item -Path $filePath -Destination C:\Dev
+    Move-Item -Path $filePath -Destination $dbBackupPath
 
     Import-Module -Name SqlServer
 
