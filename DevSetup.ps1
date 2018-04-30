@@ -66,6 +66,7 @@ function Main {
         PinToTaskBar -ApplicationPath 'c:\tools\cmder\Cmder.exe'
         PinToTaskBar -ApplicationPath 'C:\Program Files (x86)\Microsoft SQL Server\140\Tools\Binn\ManagementStudio\Ssms.exe'
         PinToTaskBar -ApplicationPath 'C:\Program Files\Internet Explorer\iexplore.exe'
+        PinToTaskBar -ApplicationPath 'C:\Program Files (x86)\GitExtensions\GitExtensions.exe'
         UnpinFromTaskBar -ApplicationPath '%SystemRoot%\system32\WindowsPowerShell\v1.0\powershell.exe'
         UnpinFromTaskBar -ApplicationPath '%SystemRoot%\system32\ServerManager.exe'
 
