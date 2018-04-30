@@ -14,19 +14,19 @@ function Main {
     $settings = InitSetupSettings
     EnsureRunningInBoxstarter
 
-    Install-ChocolateyPackage -Name powershell
-    Install-ChocolateyPackage -Name visualstudiocode
-    Install-ChocolateyPackage -Name git
-    Install-ChocolateyPackage -Name gitextensions
-    Install-ChocolateyPackage -Name kdiff3
-    Install-ChocolateyPackage -Name cmder
-    Install-ChocolateyPackage -Name sql-server-2017 -CustomParams '/SAPWD=Password13579! /SECURITYMODE=SQL'
-    Install-ChocolateyPackage -Name sql-server-management-studio
-    Install-ChocolateyPackage -Name visualstudio2017community
-    Install-ChocolateyPackage -Name visualstudio2017-workload-netweb
-    Install-ChocolateyPackage -Name resharper
-    Install-ChocolateyPackage -Name GoogleChrome
-    Install-ChocolateyPackage -Name Firefox
+    Install-ChocolateyPackageWithChecks -Name powershell
+    Install-ChocolateyPackageWithChecks -Name visualstudiocode
+    Install-ChocolateyPackageWithChecks -Name git
+    Install-ChocolateyPackageWithChecks -Name gitextensions
+    Install-ChocolateyPackageWithChecks -Name kdiff3
+    Install-ChocolateyPackageWithChecks -Name cmder
+    Install-ChocolateyPackageWithChecks -Name sql-server-2017 -CustomParams '/SAPWD=Password13579! /SECURITYMODE=SQL'
+    Install-ChocolateyPackageWithChecks -Name sql-server-management-studio
+    Install-ChocolateyPackageWithChecks -Name visualstudio2017community
+    Install-ChocolateyPackageWithChecks -Name visualstudio2017-workload-netweb
+    Install-ChocolateyPackageWithChecks -Name resharper
+    Install-ChocolateyPackageWithChecks -Name GoogleChrome
+    Install-ChocolateyPackageWithChecks -Name Firefox
 
     Install-WindowsFeature -Name Web-Server, Web-Mgmt-Console, Web-Scripting-Tools, Web-Asp-Net45
 
@@ -134,7 +134,7 @@ function Test-InsideBoxstarterInstall {
     (Test-Path -Path Variable:Boxstarter) -and $Boxstarter.ContainsKey('SourcePID')
 }
 
-function Install-ChocolateyPackage {
+function Install-ChocolateyPackageWithChecks {
     param
     (
         [Parameter(Mandatory)]
