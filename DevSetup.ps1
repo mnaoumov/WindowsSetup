@@ -244,6 +244,16 @@ function RestoreDatabase {
     }
 
     Restore-SqlDatabase -ServerInstance . -Database VTA70 -BackupFile C:\dev\VTA70.bak -RelocateFile $relocateFiles
+
+    Invoke-Sqlcmd -ServerInstance . -Database master -Query "CREATE LOGIN [otis] WITH PASSWORD=N'real203', DEFAULT_DATABASE=[VTA70], CHECK_EXPIRATION=OFF, CHECK_POLICY=OFF"
+    Invoke-Sqlcmd -ServerInstance . -Database VTA70 -Query 'ALTER USER [otis] WITH LOGIN = otis'
+    Invoke-Sqlcmd -ServerInstance . -Database VTA70 -Query 'ALTER USER [otis] WITH DEFAULT_SCHEMA=[otis]'
+    Invoke-Sqlcmd -ServerInstance . -Database VTA70 -Query 'ALTER ROLE [db_owner] ADD MEMBER [IIS APPPOOL\RISC]'
+
+    Invoke-Sqlcmd -ServerInstance . -Database master -Query 'CREATE LOGIN [IIS APPPOOL\RISC] FROM WINDOWS WITH DEFAULT_DATABASE=[master]'
+    Invoke-Sqlcmd -ServerInstance . -Database VTA70 -Query 'CREATE USER [IIS APPPOOL\RISC] FOR LOGIN [IIS APPPOOL\RISC]'
+    Invoke-Sqlcmd -ServerInstance . -Database VTA70 -Query 'ALTER USER [IIS APPPOOL\RISC] WITH DEFAULT_SCHEMA=[otis]'
+    Invoke-Sqlcmd -ServerInstance . -Database VTA70 -Query 'ALTER ROLE [db_owner] ADD MEMBER [IIS APPPOOL\RISC]'
 }
 
 function ConfigureIis {
