@@ -31,8 +31,14 @@ function Main {
     Install-WindowsFeature -Name Web-Server, Web-Mgmt-Console, Web-Scripting-Tools, Web-Asp-Net45
 
     Install-PackageProvider -Name NuGet -Force
-    Install-Module -Name posh-git -Force -AllowClobber
-    Install-Module -Name SqlServer -Force -AllowClobber
+
+    if (-not (Get-Module -Name posh-git)) {
+        Install-Module -Name posh-git -Force -AllowClobber
+    }
+
+    if (-not (Get-Module -Name SqlServer)) {
+        Install-Module -Name SqlServer -Force -AllowClobber
+    }
 
     if (Test-PendingReboot) {
         Invoke-Reboot
