@@ -74,8 +74,13 @@ function Main {
 
     RestoreDatabase
 
-    Install-FoxPro
+    Install-FoxProOleDb
+    Install-FoxProOdbc
+    Install-VisualFoxPro
+    ConfigureFoxProOdbc
+
     Install-AceCrypt
+    Install-CrystalReportsRuntime
     Install-CrystalReports
 
     C:\Dev\RISC\tools\Update-Database.ps1
@@ -278,22 +283,27 @@ function ConfigureIis {
     Invoke-Reboot
 }
 
-function Install-FoxPro {
-    if (Get-ItemProperty -Path Registry::HKEY_LOCAL_MACHINE\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* -Name DisplayName -ErrorAction SilentlyContinue | Where-Object DisplayName -eq 'Microsoft Visual FoxPro OLE DB Provider') {
+function Install-FoxProOleDb {
+    if (Test-Path -Path 'C:\Program Files (x86)\Microsoft Visual FoxPro OLE DB Provider') {
         return
     }
 
     $filePath = DownloadDevSetupFile -FileName VFPOLEDBSetup.msi
     Install-Msi -InstallerPath $filePath -AdditionalArguments 'FolderForm_AllUsers=ALL'
+}
 
+function Install-FoxProOdbc {
+    if (Test-Path -Path 'C:\Windows\SysWOW64\vfpodbc.dll') {
+        return
+    }
     $filePath = DownloadDevSetupFile -FileName VFPODBC.msi
     Install-Msi -InstallerPath $filePath
+}
 
-    New-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\ODBC\ODBC.INI\ODBC Data Sources' -Name otisreports -Value 'Microsoft Visual FoxPro Driver' -Force
-    New-Item -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\ODBC\ODBC.INI\otisreports' -Force
-    New-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\ODBC\ODBC.INI\otisreports' -Name Driver -Value 'C:\Windows\SysWOW64\vfpodbc.dll' -Force
-    New-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\ODBC\ODBC.INI\otisreports' -Name SourceDB -Value 'C:\Dev\FoxProOdbc' -Force
-    New-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\ODBC\ODBC.INI\otisreports' -Name SourceType -Value DBF -Force
+function Install-VisualFoxPro {
+    if (Test-Path -Path 'C:\Program Files (x86)\Microsoft Visual FoxPro 9') {
+        return
+    }
 
     $tempDir = "$Env:TEMP\$([Guid]::NewGuid())"
     New-Item -Path $tempDir -ItemType Directory | Out-Null
@@ -314,7 +324,7 @@ function Install-AceCrypt {
     regsvr32.exe $filePath /s
 }
 
-function Install-CrystalReports {
+function Install-CrystalReportsRuntime {
     if (Test-Path -Path 'C:\Program Files (x86)\Business Objects\Common\2.8\bin') {
         return
     }
@@ -365,6 +375,22 @@ function Install-Msi {
     }
 
     Start-Process -FilePath msiexec.exe -ArgumentList $arguments -Wait
+}
+
+function Install-CrystalReports {
+
+}
+
+function ConfigureFoxProOdbc {
+    if (Test-Path -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\ODBC\ODBC.INI\otisreports') {
+        return
+    }
+
+    New-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\ODBC\ODBC.INI\ODBC Data Sources' -Name otisreports -Value 'Microsoft Visual FoxPro Driver' -Force
+    New-Item -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\ODBC\ODBC.INI\otisreports' -Force
+    New-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\ODBC\ODBC.INI\otisreports' -Name Driver -Value 'C:\Windows\SysWOW64\vfpodbc.dll' -Force
+    New-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\ODBC\ODBC.INI\otisreports' -Name SourceDB -Value 'C:\Dev\FoxProOdbc' -Force
+    New-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\ODBC\ODBC.INI\otisreports' -Name SourceType -Value DBF -Force
 }
 
 Main
