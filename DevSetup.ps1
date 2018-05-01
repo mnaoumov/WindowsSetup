@@ -304,7 +304,7 @@ function Install-CrystalReports {
         return
     }
 
-    $filePath = DownloadDevSetupFile -FileName CRRedist2008_x86
+    $filePath = DownloadDevSetupFile -FileName CRRedist2008_x86.msi
     Install-Msi -InstallPath $filePath
 }
 
