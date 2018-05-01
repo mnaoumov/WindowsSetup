@@ -274,6 +274,8 @@ function ConfigureIis {
     New-WebAppPool -Name RISC
     Set-ItemProperty -Path IIS:\AppPools\RISC -Name enable32BitAppOnWin64 -Value true
     New-WebApplication -Site 'Default Web Site' -Name RISC -PhysicalPath C:\Dev\RISC\Risc.VTA.BackOffice.WebSite -ApplicationPool RISC
+
+    Invoke-Reboot
 }
 
 function Install-FoxPro {
