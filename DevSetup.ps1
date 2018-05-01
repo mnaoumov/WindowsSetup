@@ -288,6 +288,12 @@ function Install-FoxPro {
 
     $filePath = DownloadDevSetupFile -FileName VFPODBC.msi
     Install-Msi -InstallerPath $filePath
+
+    New-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\ODBC\ODBC.INI\ODBC Data Sources' -Name otisreports -Value 'Microsoft Visual FoxPro Driver' -Force
+    New-Item -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\ODBC\ODBC.INI\otisreports' -Force
+    New-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\ODBC\ODBC.INI\otisreports' -Name Driver -Value 'C:\Windows\SysWOW64\vfpodbc.dll' -Force
+    New-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\ODBC\ODBC.INI\otisreports' -Name SourceDB -Value 'C:\Dev\FoxProOdbc' -Force
+    New-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\ODBC\ODBC.INI\otisreports' -Name SourceType -Value DBF -Force
 }
 
 function Install-AceCrypt {
