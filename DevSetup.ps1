@@ -378,7 +378,16 @@ function Install-Msi {
 }
 
 function Install-CrystalReports {
+    if (Test-Path -Path 'C:\Program Files (x86)\Business Objects\Crystal Reports 11.5') {
+        return
+    }
 
+    $tempDir = "$Env:TEMP\$([Guid]::NewGuid())"
+    New-Item -Path $tempDir -ItemType Directory | Out-Null
+    $filePath = DownloadDevSetupFile -FileName CrystalReports.zip
+    & 'C:\ProgramData\chocolatey\tools\7z.exe' x $filePath "-o$tempDir"
+
+    Start-Process -FilePath "$tempDir\setup.exe" -ArgumentList ('/qn', 'REBOOT=ReallySuppress', 'CLIENTLANGUAGE=EN', 'ADDLOCAL=ALL', 'PIDKEY="B5W60-01C0200-00GPAJ0-0M80"') -Wait
 }
 
 function ConfigureFoxProOdbc {
