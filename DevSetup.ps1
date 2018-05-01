@@ -294,6 +294,15 @@ function Install-FoxPro {
     New-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\ODBC\ODBC.INI\otisreports' -Name Driver -Value 'C:\Windows\SysWOW64\vfpodbc.dll' -Force
     New-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\ODBC\ODBC.INI\otisreports' -Name SourceDB -Value 'C:\Dev\FoxProOdbc' -Force
     New-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\ODBC\ODBC.INI\otisreports' -Name SourceType -Value DBF -Force
+
+    $tempDir = "$Env:TEMP\$([Guid]::NewGuid())"
+    New-Item -Path $tempDir -ItemType Directory | Out-Null
+    $filePath = DownloadDevSetupFile -FileName VisualFoxPro.zip
+    & 'C:\ProgramData\chocolatey\tools\7z.exe' x $filePath "-o$tempDir"
+
+    Start-Process -FilePath "$tempDir\WCU\bootstrap.msi" -Wait
+    Start-Process -FilePath msiexec.exe -ArgumentList ('/i', "$tempDir\WCU\soap3\soapsdk.msi", "/qn") -Wait
+    Start-Process -FilePath "$tempDir\setup\setup.exe" -ArgumentList ('/UnattendFile', "$tempDir\setup\Unattended.ini") -Wait
 }
 
 function Install-AceCrypt {
